@@ -1,5 +1,5 @@
 const std = @import("std");
-const print = std.debug.print;
+const p = std.debug.print;
 // const fmt = std.fmt;
 // const mem = std.mem;
 // const assert = std.debug.assert;
@@ -17,6 +17,7 @@ pub fn main() !void {
         var array: lb.core.Array = undefined;
         const status = lb.core.array.init(&array, 32);
         _ = status;
+        p("size: {d}\n", .{array.size});
     }
     {
         const status = lb.core.array.init(null, 32);

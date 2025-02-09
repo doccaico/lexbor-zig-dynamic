@@ -1,0 +1,25 @@
+// src/core/base.zig
+
+const Status = enum(c_int) {
+    ok = 0x0000,
+    @"error" = 0x0001,
+    error_memory_allocation,
+    error_object_is_null,
+    error_small_buffer,
+    error_incomplete_object,
+    error_no_free_slot,
+    error_too_small_size,
+    error_not_exists,
+    error_wrong_args,
+    error_wrong_stage,
+    error_unexpected_result,
+    error_unexpected_data,
+    error_overflow,
+    @"continue",
+    small_buffer,
+    aborted,
+    stopped,
+    next,
+    stop,
+    warning,
+};
