@@ -1,6 +1,6 @@
 // src/core/base.zig
 
-const Status = enum(c_int) {
+pub const Status = enum(c_int) {
     ok = 0x0000,
     @"error" = 0x0001,
     error_memory_allocation,

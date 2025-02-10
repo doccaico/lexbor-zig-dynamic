@@ -1,55 +1,41 @@
 const std = @import("std");
 
-const Lib = struct {
-    path: []const u8,
-    import_name: []const u8,
-};
-
-const libs = [_]Lib{
-    .{ .path = "src/lexbor.zig", .import_name = "lexbor" },
-};
+// const Lib = struct {
+//     path: []const u8,
+//     import_name: []const u8,
+// };
+//
+// const libs = [_]Lib{
+//     .{ .path = "src/lexbor.zig", .import_name = "lexbor" },
+// };
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const exe_mod = b.createModule(.{
-        .root_source_file = b.path("main.zig"),
+    const lib_mod = b.createModule(.{
+        .root_source_file = b.path("src/lexbor.zig"),
         .target = target,
         .optimize = optimize,
+        .link_libc = true,
     });
 
-    for (libs) |lib| {
-        const mod = b.createModule(.{
-            .root_source_file = b.path(lib.path),
-            .target = target,
-            .optimize = optimize,
-            .link_libc = true,
-        });
-        exe_mod.addImport(lib.import_name, mod);
-    }
-
-    const exe = b.addExecutable(.{
-        .name = "basic",
-        .root_module = exe_mod,
-        .linkage = .dynamic,
+    const unit_tests = b.addTest(.{
+        .root_source_file = b.path("test/unit_tests.zig"),
     });
 
-    exe.addLibraryPath(b.path("./lib"));
-    exe.linkSystemLibrary("lexbor");
+    unit_tests.root_module.addImport("lexbor", lib_mod);
+    unit_tests.addLibraryPath(b.path("lib"));
+    unit_tests.linkSystemLibrary("lexbor");
+
+    const install_exe_unit_test = b.addInstallArtifact(unit_tests, .{});
+    install_exe_unit_test.step.dependOn(b.getInstallStep());
+
+    const run_exe_unit_tests = b.addRunArtifact(unit_tests);
+    run_exe_unit_tests.step.dependOn(&install_exe_unit_test.step);
+
+    const test_all_step = b.step("test", "Run all tests");
+    test_all_step.dependOn(&run_exe_unit_tests.step);
 
     b.installBinFile("lib/lexbor.dll", "lexbor.dll");
-
-    b.installArtifact(exe);
-
-    const run_cmd = b.addRunArtifact(exe);
-
-    run_cmd.step.dependOn(b.getInstallStep());
-
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
-    }
-
-    const run_step = b.step("run", "Run the app");
-    run_step.dependOn(&run_cmd.step);
 }
