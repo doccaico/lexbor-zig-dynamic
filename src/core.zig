@@ -13,7 +13,7 @@ pub const array = extern struct {
         return lexbor_array_create();
     }
 
-    pub fn init(self: [*c]array, size: usize) lb.core.status {
+    pub fn init(self: [*c]array, size: usize) status {
         return lexbor_array_init(self, size);
     }
 
@@ -29,7 +29,7 @@ pub const array = extern struct {
         return lexbor_array_expand(self, up_to);
     }
 
-    pub fn push(self: [*c]array, value: ?*anyopaque) lb.core.status {
+    pub fn push(self: [*c]array, value: ?*anyopaque) status {
         return lexbor_array_push(self, value);
     }
 
@@ -37,11 +37,11 @@ pub const array = extern struct {
         return lexbor_array_pop(self);
     }
 
-    pub fn insert(self: [*c]array, idx: usize, value: *anyopaque) lb.core.status {
+    pub fn insert(self: [*c]array, idx: usize, value: *anyopaque) status {
         return lexbor_array_insert(self, idx, value);
     }
 
-    pub fn set(self: [*c]array, idx: usize, value: *anyopaque) lb.core.status {
+    pub fn set(self: [*c]array, idx: usize, value: *anyopaque) status {
         return lexbor_array_set(self, idx, value);
     }
 
@@ -69,19 +69,19 @@ pub const array = extern struct {
     }
 };
 
-pub extern "c" fn lexbor_array_create() *array;
-pub extern "c" fn lexbor_array_init(array: [*c]array, size: usize) lb.core.status;
-pub extern "c" fn lexbor_array_clean(array: [*c]array) void;
-pub extern "c" fn lexbor_array_destroy(array: [*c]array, self_destroy: bool) [*c]array;
-pub extern "c" fn lexbor_array_expand(array: [*c]array, up_to: usize) **anyopaque;
-pub extern "c" fn lexbor_array_push(array: [*c]array, value: ?*anyopaque) lb.core.status;
-pub extern "c" fn lexbor_array_pop(array: [*c]array) *anyopaque;
-pub extern "c" fn lexbor_array_insert(array: [*c]array, idx: usize, value: *anyopaque) lb.core.status;
-pub extern "c" fn lexbor_array_set(array: [*c]array, idx: usize, value: *anyopaque) lb.core.status;
-pub extern "c" fn lexbor_array_delete(array: [*c]array, begin: usize, length: usize) void;
-pub extern "c" fn lexbor_array_get_noi(array: [*c]array, idx: usize) ?*anyopaque;
-pub extern "c" fn lexbor_array_length_noi(array: [*c]array) usize;
-pub extern "c" fn lexbor_array_size_noi(array: [*c]array) usize;
+extern "c" fn lexbor_array_create() *array;
+extern "c" fn lexbor_array_init(array: [*c]array, size: usize) status;
+extern "c" fn lexbor_array_clean(array: [*c]array) void;
+extern "c" fn lexbor_array_destroy(array: [*c]array, self_destroy: bool) [*c]array;
+extern "c" fn lexbor_array_expand(array: [*c]array, up_to: usize) **anyopaque;
+extern "c" fn lexbor_array_push(array: [*c]array, value: ?*anyopaque) status;
+extern "c" fn lexbor_array_pop(array: [*c]array) *anyopaque;
+extern "c" fn lexbor_array_insert(array: [*c]array, idx: usize, value: *anyopaque) status;
+extern "c" fn lexbor_array_set(array: [*c]array, idx: usize, value: *anyopaque) status;
+extern "c" fn lexbor_array_delete(array: [*c]array, begin: usize, length: usize) void;
+extern "c" fn lexbor_array_get_noi(array: [*c]array, idx: usize) ?*anyopaque;
+extern "c" fn lexbor_array_length_noi(array: [*c]array) usize;
+extern "c" fn lexbor_array_size_noi(array: [*c]array) usize;
 
 // core/array_obj.zig
 
@@ -95,7 +95,7 @@ pub const array_obj = extern struct {
         return lexbor_array_obj_create();
     }
 
-    pub fn init(self: [*c]array_obj, size: usize, struct_size: usize) [*c]array_obj {
+    pub fn init(self: [*c]array_obj, size: usize, struct_size: usize) status {
         return lexbor_array_obj_init(self, size, struct_size);
     }
 
@@ -111,7 +111,7 @@ pub const array_obj = extern struct {
         return lexbor_array_obj_expand(self, up_to);
     }
 
-    pub fn push(self: [*c]array_obj) *anyopaque {
+    pub fn push(self: [*c]array_obj) ?*anyopaque {
         return lexbor_array_obj_push(self);
     }
 
@@ -135,37 +135,37 @@ pub const array_obj = extern struct {
         return @memset(self[0..], @sizeOf(array_obj));
     }
 
-    pub inline fn get(self: [*c]array_obj, idx: usize) *anyopaque {
-        if (idx >= array.length) {
+    pub inline fn get(self: [*c]array_obj, idx: usize) ?*anyopaque {
+        if (idx >= self.*.length) {
             return null;
         }
-        return self.list + (idx * array.struct_size);
+        return self.*.list + (idx * self.*.struct_size);
     }
 
-    pub inline fn last(self: [*c]array_obj) *anyopaque {
-        if (array.length == 0) {
+    pub inline fn last(self: [*c]array_obj) ?*anyopaque {
+        if (self.*.length == 0) {
             return null;
         }
-        return self.list + ((self.length - 1) * self.struct_size);
+        return self.*.list + ((self.*.length - 1) * self.*.struct_size);
     }
 };
 
-pub extern "c" fn lexbor_array_obj_create() *array_obj;
-pub extern "c" fn lexbor_array_obj_init(array: [*c]array_obj, size: usize, struct_size: usize) [*]array_obj;
-pub extern "c" fn lexbor_array_obj_clean(array: [*c]array_obj) void;
-pub extern "c" fn lexbor_array_obj_destroy(array: [*c]array_obj, self_destroy: bool) [*c]array_obj;
-pub extern "c" fn lexbor_array_obj_expand(array: [*c]array_obj, up_to: usize) [*c]u8;
-pub extern "c" fn lexbor_array_obj_push(array: [*c]array_obj) *anyopaque;
-pub extern "c" fn lexbor_array_obj_push_wo_cls(array: [*c]array_obj) *anyopaque;
-pub extern "c" fn lexbor_array_obj_push_n(array: [*c]array_obj, count: usize) *anyopaque;
-pub extern "c" fn lexbor_array_obj_pop(array: [*c]array_obj) *anyopaque;
-pub extern "c" fn lexbor_array_obj_delete(array: [*c]array_obj, begin: usize, length: usize) void;
-pub extern "c" fn lexbor_array_obj_erase_noi(array: [*c]array_obj) void;
-pub extern "c" fn lexbor_array_obj_get_noi(array: [*c]array_obj, idx: usize) *anyopaque;
-pub extern "c" fn lexbor_array_obj_length_noi(array: [*c]array_obj) usize;
-pub extern "c" fn lexbor_array_obj_size_noi(array: [*c]array_obj) usize;
-pub extern "c" fn lexbor_array_obj_struct_size_noi(array: [*c]array_obj) usize;
-pub extern "c" fn lexbor_array_obj_last_noi(array: [*c]array_obj) *anyopaque;
+extern "c" fn lexbor_array_obj_create() *array_obj;
+extern "c" fn lexbor_array_obj_init(array: [*c]array_obj, size: usize, struct_size: usize) status;
+extern "c" fn lexbor_array_obj_clean(array: [*c]array_obj) void;
+extern "c" fn lexbor_array_obj_destroy(array: [*c]array_obj, self_destroy: bool) [*c]array_obj;
+extern "c" fn lexbor_array_obj_expand(array: [*c]array_obj, up_to: usize) [*c]u8;
+extern "c" fn lexbor_array_obj_push(array: [*c]array_obj) ?*anyopaque;
+extern "c" fn lexbor_array_obj_push_wo_cls(array: [*c]array_obj) *anyopaque;
+extern "c" fn lexbor_array_obj_push_n(array: [*c]array_obj, count: usize) *anyopaque;
+extern "c" fn lexbor_array_obj_pop(array: [*c]array_obj) *anyopaque;
+extern "c" fn lexbor_array_obj_delete(array: [*c]array_obj, begin: usize, length: usize) void;
+extern "c" fn lexbor_array_obj_erase_noi(array: [*c]array_obj) void;
+extern "c" fn lexbor_array_obj_get_noi(array: [*c]array_obj, idx: usize) *anyopaque;
+extern "c" fn lexbor_array_obj_length_noi(array: [*c]array_obj) usize;
+extern "c" fn lexbor_array_obj_size_noi(array: [*c]array_obj) usize;
+extern "c" fn lexbor_array_obj_struct_size_noi(array: [*c]array_obj) usize;
+extern "c" fn lexbor_array_obj_last_noi(array: [*c]array_obj) *anyopaque;
 
 // core/base.zig
 
