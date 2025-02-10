@@ -87,8 +87,30 @@ pub extern "c" fn lexbor_array_size_noi(array: [*c]array) usize;
 
 // core/base.zig
 
-pub const Status = @import("core/base.zig").Status;
+pub const Status = enum(c_int) {
+    ok = 0x0000,
+    @"error" = 0x0001,
+    error_memory_allocation,
+    error_object_is_null,
+    error_small_buffer,
+    error_incomplete_object,
+    error_no_free_slot,
+    error_too_small_size,
+    error_not_exists,
+    error_wrong_args,
+    error_wrong_stage,
+    error_unexpected_result,
+    error_unexpected_data,
+    error_overflow,
+    @"continue",
+    small_buffer,
+    aborted,
+    stopped,
+    next,
+    stop,
+    warning,
+};
 
 // core/types.zig
 
-pub const status = @import("core/types.zig").status;
+pub const status = c_uint;

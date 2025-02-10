@@ -1,14 +1,5 @@
 const std = @import("std");
 
-// const Lib = struct {
-//     path: []const u8,
-//     import_name: []const u8,
-// };
-//
-// const libs = [_]Lib{
-//     .{ .path = "src/lexbor.zig", .import_name = "lexbor" },
-// };
-
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
