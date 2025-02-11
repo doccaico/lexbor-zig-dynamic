@@ -375,3 +375,57 @@ test "tree_5" {
 
     _ = avl.destroy(false);
 }
+
+test "delete_1L" {
+    var avl: lb.core.avl = undefined;
+    var root: ?*lb.core.avl_node = null;
+    var node: ?*lb.core.avl_node = undefined;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    _ = avl.insert(&root, 1, @as(*anyopaque, @ptrFromInt(1)));
+    _ = avl.insert(&root, 2, @as(*anyopaque, @ptrFromInt(2)));
+    _ = avl.insert(&root, 3, @as(*anyopaque, @ptrFromInt(3)));
+    _ = avl.insert(&root, 4, @as(*anyopaque, @ptrFromInt(4)));
+
+    try expect(root != null);
+
+    try expect(avl.remove(root, 1) != null);
+    try expect(root != null);
+
+    // 2
+    node = avl.search(root, 2);
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 2);
+    try expectEqual(node.?.left, null);
+    try expectEqual(node.?.right, null);
+    try expect(node.?.parent != null);
+    try expectEqual(node.?.parent.?.type, 3);
+
+    // 3
+    node = node.?.parent;
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 3);
+
+    try expect(node.?.left != null);
+    try expectEqual(node.?.left.?.type, 2);
+
+    try expect(node.?.right != null);
+    try expectEqual(node.?.right.?.type, 4);
+
+    try expectEqual(node.?.parent, null);
+
+    // 4
+    node = node.?.right;
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 4);
+    try expectEqual(node.?.left, null);
+    try expectEqual(node.?.right, null);
+    try expect(node.?.parent != null);
+    try expectEqual(node.?.parent.?.type, 3);
+
+    _ = avl.destroy(false);
+}
