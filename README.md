@@ -1,1 +1,32 @@
-### WIP
+### (Very WIP) A Lexbor Binding (Windows only)
+
+#### Fetch
+```
+zig fetch --save=lexbor https://github.com/doccaico/lexbor-zig/archive/<git-commit-hash>.tar.gz
+```
+
+#### Usage
+// build.zig
+
+```zig
+const lexbor_dep = b.dependency("lexbor", .{ .target = target, .optimize = optimize });
+exe.root_module.addImport("lexbor", lexbor_dep.module("lexbor"));
+
+const install_lib = b.addInstallBinFile(lexbor_dep.path("lib/lexbor.dll"), "lexbor.dll");
+b.default_step.dependOn(&install_lib.step);
+
+// src/main.zig
+
+const std = @import("std");
+
+const lb = @import("lexbor");
+
+pub fn main() !void {
+    var array = lb.core.array.create();
+    const status = array.init(32);
+
+    try std.testing.expectEqual(status, @intFromEnum(lb.core.Status.ok));
+
+    _ = array.destroy(true);
+}
+```
