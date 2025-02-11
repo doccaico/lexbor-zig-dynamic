@@ -351,3 +351,23 @@ test "pop" {
 //
 //     try expectEqual(array.destroy(false), &array);
 // }
+
+// adding test cases
+
+test "erase" {
+    var array: lb.core.array_obj = undefined;
+    _ = array.init(32, @sizeOf(test_struct));
+
+    const e0 = array.push();
+    try expectEqual(array.get(0), e0);
+
+    const e1 = array.push();
+    try expectEqual(array.get(1), e1);
+
+    array.erase();
+
+    try expectEqual(array.get(0), null);
+    try expectEqual(array.get(1), null);
+
+    _ = array.destroy(false);
+}
