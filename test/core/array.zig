@@ -5,7 +5,7 @@ const expectEqual = std.testing.expectEqual;
 const lb = @import("lexbor");
 
 test "init" {
-    var array = lb.core.array.create();
+    var array = lb.core.array.create().?;
     const status = array.init(32);
 
     try expectEqual(status, @intFromEnum(lb.core.Status.ok));
@@ -344,12 +344,12 @@ test "expand" {
 }
 
 test "destroy" {
-    var array = lb.core.array.create();
+    var array = lb.core.array.create().?;
     _ = array.init(32);
 
     try expectEqual(array.destroy(true), null);
 
-    array = lb.core.array.create();
+    array = lb.core.array.create().?;
     _ = array.init(32);
 
     try expectEqual(array.destroy(false), array);
