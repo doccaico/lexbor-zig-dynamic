@@ -6,9 +6,9 @@ zig fetch --save=lexbor https://github.com/doccaico/lexbor-zig/archive/<git-comm
 ```
 
 #### Usage
+```zig
 // build.zig
 
-```zig
 const lexbor_dep = b.dependency("lexbor", .{ .target = target, .optimize = optimize });
 exe.root_module.addImport("lexbor", lexbor_dep.module("lexbor"));
 
