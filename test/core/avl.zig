@@ -390,7 +390,7 @@ test "delete_1L" {
 
     try expect(root != null);
 
-    try expect(avl.remove(root, 1) != null);
+    try expect(avl.remove(&root, 1) != null);
     try expect(root != null);
 
     // 2
