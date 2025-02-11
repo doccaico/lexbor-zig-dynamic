@@ -104,11 +104,11 @@ pub const array_obj = extern struct {
         return lexbor_array_obj_clean(self);
     }
 
-    pub fn destroy(self: *array_obj, self_destroy: bool) *array_obj {
+    pub fn destroy(self: ?*array_obj, self_destroy: bool) *array_obj {
         return lexbor_array_obj_destroy(self, self_destroy);
     }
 
-    pub fn expand(self: *array_obj, up_to: usize) *u8 {
+    pub fn expand(self: *array_obj, up_to: usize) ?*u8 {
         return lexbor_array_obj_expand(self, up_to);
     }
 
@@ -155,8 +155,8 @@ pub const array_obj = extern struct {
 extern "c" fn lexbor_array_obj_create() *array_obj;
 extern "c" fn lexbor_array_obj_init(array: ?*array_obj, size: usize, struct_size: usize) status;
 extern "c" fn lexbor_array_obj_clean(array: *array_obj) void;
-extern "c" fn lexbor_array_obj_destroy(array: *array_obj, self_destroy: bool) *array_obj;
-extern "c" fn lexbor_array_obj_expand(array: *array_obj, up_to: usize) *u8;
+extern "c" fn lexbor_array_obj_destroy(array: ?*array_obj, self_destroy: bool) *array_obj;
+extern "c" fn lexbor_array_obj_expand(array: *array_obj, up_to: usize) ?*u8;
 extern "c" fn lexbor_array_obj_push(array: *array_obj) ?*anyopaque;
 extern "c" fn lexbor_array_obj_push_wo_cls(array: *array_obj) *anyopaque;
 extern "c" fn lexbor_array_obj_push_n(array: *array_obj, count: usize) *anyopaque;

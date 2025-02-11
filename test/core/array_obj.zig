@@ -5,7 +5,7 @@ const expectEqual = std.testing.expectEqual;
 const lb = @import("lexbor");
 
 pub const test_struct = struct {
-    data: *c_char,
+    data: *allowzero c_char,
     len: usize,
 };
 
@@ -85,282 +85,172 @@ test "pop_if_empty" {
     _ = array.destroy(false);
 }
 
-// test "get" {
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     try expectEqual(array.get(1), null);
-//     try expectEqual(array.get(0), null);
-//
-//     _ = array.push(@as(*anyopaque, @ptrFromInt(123)));
-//
-//     try expectEqual(array.get(0), @as(*anyopaque, @ptrFromInt(123)));
-//     try expectEqual(array.get(1), null);
-//     try expectEqual(array.get(1000), null);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "set" {
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     _ = array.push(@as(*anyopaque, @ptrFromInt(123)));
-//
-//     try expectEqual(array.set(0, @as(*anyopaque, @ptrFromInt(456))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.get(0), @as(*anyopaque, @ptrFromInt(456)));
-//
-//     try expectEqual(array.length, 1);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "set_not_exists" {
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     try expectEqual(array.set(10, @as(*anyopaque, @ptrFromInt(123))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.get(10), @as(*anyopaque, @ptrFromInt(123)));
-//
-//     for (0..10) |i| {
-//         try expectEqual(array.get(i), null);
-//     }
-//
-//     try expectEqual(array.length, 11);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "insert" {
-//     var status: lb.core.status = undefined;
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     status = array.insert(0, @as(*anyopaque, @ptrFromInt(456)));
-//     try expectEqual(status, @intFromEnum(lb.core.Status.ok));
-//
-//     try expectEqual(array.get(0), @as(*anyopaque, @ptrFromInt(456)));
-//
-//     try expectEqual(array.length, 1);
-//     try expectEqual(array.size, 32);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "insert_end" {
-//     var status: lb.core.status = undefined;
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     status = array.insert(32, @as(*anyopaque, @ptrFromInt(457)));
-//     try expectEqual(status, @intFromEnum(lb.core.Status.ok));
-//
-//     try expectEqual(array.get(32), @as(*anyopaque, @ptrFromInt(457)));
-//
-//     try expectEqual(array.length, 33);
-//     try expect(array.size != 32);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "insert_overflow" {
-//     var status: lb.core.status = undefined;
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     status = array.insert(33, @as(*anyopaque, @ptrFromInt(458)));
-//     try expectEqual(status, @intFromEnum(lb.core.Status.ok));
-//
-//     try expectEqual(array.get(33), @as(*anyopaque, @ptrFromInt(458)));
-//
-//     try expectEqual(array.length, 34);
-//     try expect(array.size != 32);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "insert_to" {
-//     var status: lb.core.status = undefined;
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(1))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(2))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(3))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(4))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(5))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(6))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(7))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(8))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(9))), @intFromEnum(lb.core.Status.ok));
-//
-//     status = array.insert(4, @as(*anyopaque, @ptrFromInt(459)));
-//     try expectEqual(status, @intFromEnum(lb.core.Status.ok));
-//
-//     try expectEqual(array.get(0), @as(*anyopaque, @ptrFromInt(1)));
-//     try expectEqual(array.get(1), @as(*anyopaque, @ptrFromInt(2)));
-//     try expectEqual(array.get(2), @as(*anyopaque, @ptrFromInt(3)));
-//     try expectEqual(array.get(3), @as(*anyopaque, @ptrFromInt(4)));
-//     try expectEqual(array.get(4), @as(*anyopaque, @ptrFromInt(459)));
-//     try expectEqual(array.get(5), @as(*anyopaque, @ptrFromInt(5)));
-//     try expectEqual(array.get(6), @as(*anyopaque, @ptrFromInt(6)));
-//     try expectEqual(array.get(7), @as(*anyopaque, @ptrFromInt(7)));
-//     try expectEqual(array.get(8), @as(*anyopaque, @ptrFromInt(8)));
-//     try expectEqual(array.get(9), @as(*anyopaque, @ptrFromInt(9)));
-//
-//     try expectEqual(array.length, 10);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "insert_to_end" {
-//     var status: lb.core.status = undefined;
-//     var array: lb.core.array = undefined;
-//     _ = array.init(9);
-//
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(1))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(2))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(3))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(4))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(5))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(6))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(7))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(8))), @intFromEnum(lb.core.Status.ok));
-//     try expectEqual(array.push(@as(*anyopaque, @ptrFromInt(9))), @intFromEnum(lb.core.Status.ok));
-//
-//     try expectEqual(array.length, 9);
-//     try expectEqual(array.size, 9);
-//
-//     status = array.insert(4, @as(*anyopaque, @ptrFromInt(459)));
-//     try expectEqual(status, @intFromEnum(lb.core.Status.ok));
-//
-//     try expectEqual(array.get(0), @as(*anyopaque, @ptrFromInt(1)));
-//     try expectEqual(array.get(1), @as(*anyopaque, @ptrFromInt(2)));
-//     try expectEqual(array.get(2), @as(*anyopaque, @ptrFromInt(3)));
-//     try expectEqual(array.get(3), @as(*anyopaque, @ptrFromInt(4)));
-//     try expectEqual(array.get(4), @as(*anyopaque, @ptrFromInt(459)));
-//     try expectEqual(array.get(5), @as(*anyopaque, @ptrFromInt(5)));
-//     try expectEqual(array.get(6), @as(*anyopaque, @ptrFromInt(6)));
-//     try expectEqual(array.get(7), @as(*anyopaque, @ptrFromInt(7)));
-//     try expectEqual(array.get(8), @as(*anyopaque, @ptrFromInt(8)));
-//     try expectEqual(array.get(9), @as(*anyopaque, @ptrFromInt(9)));
-//
-//     try expectEqual(array.length, 10);
-//     try expect(array.length != 9);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "delete" {
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     for (0..10) |i| {
-//         _ = array.push(@as(?*anyopaque, @ptrFromInt(i)));
-//     }
-//
-//     try expectEqual(array.length, 10);
-//
-//     array.delete(10, 100);
-//     try expectEqual(array.length, 10);
-//
-//     array.delete(100, 1);
-//     try expectEqual(array.length, 10);
-//
-//     array.delete(100, 0);
-//     try expectEqual(array.length, 10);
-//
-//     for (0..10) |i| {
-//         try expectEqual(array.get(i), @as(?*anyopaque, @ptrFromInt(i)));
-//     }
-//
-//     array.delete(4, 4);
-//     try expectEqual(array.length, 6);
-//
-//     array.delete(4, 0);
-//     try expectEqual(array.length, 6);
-//
-//     array.delete(0, 0);
-//     try expectEqual(array.length, 6);
-//
-//     try expectEqual(array.get(0), @as(?*anyopaque, @ptrFromInt(0)));
-//     try expectEqual(array.get(1), @as(*anyopaque, @ptrFromInt(1)));
-//     try expectEqual(array.get(2), @as(*anyopaque, @ptrFromInt(2)));
-//     try expectEqual(array.get(3), @as(*anyopaque, @ptrFromInt(3)));
-//     try expectEqual(array.get(4), @as(*anyopaque, @ptrFromInt(8)));
-//     try expectEqual(array.get(5), @as(*anyopaque, @ptrFromInt(9)));
-//
-//     array.delete(0, 1);
-//     try expectEqual(array.length, 5);
-//
-//     try expectEqual(array.get(0), @as(*anyopaque, @ptrFromInt(1)));
-//     try expectEqual(array.get(1), @as(*anyopaque, @ptrFromInt(2)));
-//     try expectEqual(array.get(2), @as(*anyopaque, @ptrFromInt(3)));
-//     try expectEqual(array.get(3), @as(*anyopaque, @ptrFromInt(8)));
-//     try expectEqual(array.get(4), @as(*anyopaque, @ptrFromInt(9)));
-//
-//     array.delete(1, 1000);
-//     try expectEqual(array.length, 1);
-//
-//     try expectEqual(array.get(0), @as(*anyopaque, @ptrFromInt(1)));
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "delete_if_empty" {
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     array.delete(0, 0);
-//     try expectEqual(array.length, 0);
-//
-//     array.delete(1, 0);
-//     try expectEqual(array.length, 0);
-//
-//     array.delete(1, 1);
-//     try expectEqual(array.length, 0);
-//
-//     array.delete(100, 1);
-//     try expectEqual(array.length, 0);
-//
-//     array.delete(10, 100);
-//     try expectEqual(array.length, 0);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "expand" {
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     try expect(array.expand(128) != null);
-//     try expectEqual(array.size, 128);
-//
-//     _ = array.destroy(false);
-// }
-//
-// test "destroy" {
-//     var array = lb.core.array.create();
-//     _ = array.init(32);
-//
-//     try expectEqual(array.destroy(true), null);
-//
-//     array = lb.core.array.create();
-//     _ = array.init(32);
-//
-//     try expectEqual(array.destroy(false), array);
-//     try expectEqual(array.destroy(true), null);
-//     try expectEqual(lb.core.array.destroy(null, false), null);
-// }
-//
-// test "destroy_stack" {
-//     var array: lb.core.array = undefined;
-//     _ = array.init(32);
-//
-//     try expectEqual(array.destroy(false), &array);
-// }
+test "get" {
+    var array: lb.core.array_obj = undefined;
+    _ = array.init(32, @sizeOf(test_struct));
 
-// adding test cases
+    try expectEqual(array.get(1), null);
+    try expectEqual(array.get(0), null);
+
+    const entry = array.push();
+    try expect(entry != null);
+
+    try expectEqual(array.get(0), entry);
+    try expectEqual(array.get(1), null);
+    try expectEqual(array.get(1000), null);
+
+    _ = array.destroy(false);
+}
+
+test "delete" {
+    var entry: *test_struct = undefined;
+    var array: lb.core.array_obj = undefined;
+
+    _ = array.init(32, @sizeOf(test_struct));
+
+    for (0..10) |i| {
+        entry = @ptrCast(@alignCast(array.push()));
+        entry.data = @ptrFromInt(i);
+        entry.len = i;
+    }
+
+    try expectEqual(array.length, 10);
+
+    array.delete(10, 100);
+    try expectEqual(array.length, 10);
+
+    array.delete(100, 1);
+    try expectEqual(array.length, 10);
+
+    array.delete(100, 0);
+    try expectEqual(array.length, 10);
+
+    for (0..10) |i| {
+        entry = @ptrCast(@alignCast(array.get(i)));
+        try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(i)));
+        try expectEqual(entry.len, i);
+    }
+
+    array.delete(4, 4);
+    try expectEqual(array.length, 6);
+
+    array.delete(4, 0);
+    try expectEqual(array.length, 6);
+
+    array.delete(0, 0);
+    try expectEqual(array.length, 6);
+
+    entry = @ptrCast(@alignCast(array.get(0)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(0)));
+    try expectEqual(entry.len, 0);
+
+    entry = @ptrCast(@alignCast(array.get(1)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(1)));
+    try expectEqual(entry.len, 1);
+
+    entry = @ptrCast(@alignCast(array.get(2)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(2)));
+    try expectEqual(entry.len, 2);
+
+    entry = @ptrCast(@alignCast(array.get(3)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(3)));
+    try expectEqual(entry.len, 3);
+
+    entry = @ptrCast(@alignCast(array.get(4)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(8)));
+    try expectEqual(entry.len, 8);
+
+    entry = @ptrCast(@alignCast(array.get(5)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(9)));
+    try expectEqual(entry.len, 9);
+
+    array.delete(0, 1);
+    try expectEqual(array.length, 5);
+
+    entry = @ptrCast(@alignCast(array.get(0)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(1)));
+    try expectEqual(entry.len, 1);
+
+    entry = @ptrCast(@alignCast(array.get(1)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(2)));
+    try expectEqual(entry.len, 2);
+
+    entry = @ptrCast(@alignCast(array.get(2)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(3)));
+    try expectEqual(entry.len, 3);
+
+    entry = @ptrCast(@alignCast(array.get(3)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(8)));
+    try expectEqual(entry.len, 8);
+
+    entry = @ptrCast(@alignCast(array.get(4)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(9)));
+    try expectEqual(entry.len, 9);
+
+    array.delete(1, 1000);
+    try expectEqual(array.length, 1);
+
+    entry = @ptrCast(@alignCast(array.get(0)));
+    try expectEqual(entry.data, @as(*allowzero c_char, @ptrFromInt(1)));
+    try expectEqual(entry.len, 1);
+
+    _ = array.destroy(false);
+}
+
+test "delete_if_empty" {
+    var array: lb.core.array_obj = undefined;
+    _ = array.init(32, @sizeOf(test_struct));
+
+    array.delete(0, 0);
+    try expectEqual(array.length, 0);
+
+    array.delete(1, 0);
+    try expectEqual(array.length, 0);
+
+    array.delete(1, 1);
+    try expectEqual(array.length, 0);
+
+    array.delete(100, 1);
+    try expectEqual(array.length, 0);
+
+    array.delete(10, 100);
+    try expectEqual(array.length, 0);
+
+    _ = array.destroy(false);
+}
+
+test "expand" {
+    var array: lb.core.array_obj = undefined;
+    _ = array.init(32, @sizeOf(test_struct));
+
+    try expect(array.expand(128) != null);
+    try expectEqual(array.size, 128);
+
+    _ = array.destroy(false);
+}
+
+test "destroy" {
+    var array = lb.core.array_obj.create();
+    _ = array.init(32, @sizeOf(test_struct));
+
+    try expectEqual(array.destroy(true), null);
+
+    array = lb.core.array_obj.create();
+    _ = array.init(32, @sizeOf(test_struct));
+
+    try expectEqual(array.destroy(false), array);
+    try expectEqual(array.destroy(true), null);
+    try expectEqual(lb.core.array_obj.destroy(null, false), null);
+}
+
+test "destroy_stack" {
+    var array: lb.core.array_obj = undefined;
+    _ = array.init(32, @sizeOf(test_struct));
+
+    try expectEqual(lb.core.array_obj.destroy(&array, false), &array);
+}
+
+// adding my test cases
 
 test "erase" {
     var array: lb.core.array_obj = undefined;
