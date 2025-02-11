@@ -782,3 +782,311 @@ test "delete_sub_1R" {
 
     _ = avl.destroy(false);
 }
+
+test "delete_10_0" {
+    var avl: lb.core.avl = undefined;
+    var root: ?*lb.core.avl_node = null;
+    var node: ?*lb.core.avl_node = undefined;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    _ = avl.insert(&root, 1, @as(*anyopaque, @ptrFromInt(1)));
+    _ = avl.insert(&root, 2, @as(*anyopaque, @ptrFromInt(2)));
+    _ = avl.insert(&root, 3, @as(*anyopaque, @ptrFromInt(3)));
+    _ = avl.insert(&root, 4, @as(*anyopaque, @ptrFromInt(4)));
+    _ = avl.insert(&root, 5, @as(*anyopaque, @ptrFromInt(5)));
+    _ = avl.insert(&root, 6, @as(*anyopaque, @ptrFromInt(6)));
+    _ = avl.insert(&root, 7, @as(*anyopaque, @ptrFromInt(7)));
+    _ = avl.insert(&root, 8, @as(*anyopaque, @ptrFromInt(8)));
+    _ = avl.insert(&root, 9, @as(*anyopaque, @ptrFromInt(9)));
+    _ = avl.insert(&root, 10, @as(*anyopaque, @ptrFromInt(10)));
+
+    try expect(root != null);
+
+    try expect(avl.remove(&root, 8) != null);
+    try expect(root != null);
+
+    // 4
+    node = avl.search(root, 4);
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 4);
+
+    try expect(node.?.left != null);
+    try expect(node.?.right != null);
+    try expectEqual(node.?.parent, null);
+
+    try expectEqual(node.?.left.?.type, 2);
+    try expectEqual(node.?.left.?.left.?.type, 1);
+    try expectEqual(node.?.left.?.right.?.type, 3);
+
+    try expectEqual(node.?.right.?.type, 7);
+    try expectEqual(node.?.right.?.left.?.type, 6);
+    try expectEqual(node.?.right.?.right.?.type, 9);
+    try expectEqual(node.?.right.?.left.?.left.?.type, 5);
+    try expectEqual(node.?.right.?.right.?.right.?.type, 10);
+
+    _ = avl.destroy(false);
+}
+
+test "delete_10_1" {
+    var avl: lb.core.avl = undefined;
+    var root: ?*lb.core.avl_node = null;
+    var node: ?*lb.core.avl_node = undefined;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    _ = avl.insert(&root, 1, @as(*anyopaque, @ptrFromInt(1)));
+    _ = avl.insert(&root, 2, @as(*anyopaque, @ptrFromInt(2)));
+    _ = avl.insert(&root, 3, @as(*anyopaque, @ptrFromInt(3)));
+    _ = avl.insert(&root, 4, @as(*anyopaque, @ptrFromInt(4)));
+    _ = avl.insert(&root, 5, @as(*anyopaque, @ptrFromInt(5)));
+    _ = avl.insert(&root, 6, @as(*anyopaque, @ptrFromInt(6)));
+    _ = avl.insert(&root, 7, @as(*anyopaque, @ptrFromInt(7)));
+    _ = avl.insert(&root, 8, @as(*anyopaque, @ptrFromInt(8)));
+    _ = avl.insert(&root, 9, @as(*anyopaque, @ptrFromInt(9)));
+    _ = avl.insert(&root, 10, @as(*anyopaque, @ptrFromInt(10)));
+
+    try expect(root != null);
+
+    try expect(avl.remove(&root, 8) != null);
+    try expect(root != null);
+    try expect(avl.remove(&root, 5) != null);
+    try expect(root != null);
+
+    // 4
+    node = avl.search(root, 4);
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 4);
+
+    try expect(node.?.left != null);
+    try expect(node.?.right != null);
+    try expectEqual(node.?.parent, null);
+
+    try expectEqual(node.?.left.?.type, 2);
+    try expectEqual(node.?.left.?.left.?.type, 1);
+    try expectEqual(node.?.left.?.right.?.type, 3);
+
+    try expectEqual(node.?.right.?.type, 7);
+    try expectEqual(node.?.right.?.left.?.type, 6);
+    try expectEqual(node.?.right.?.right.?.type, 9);
+    try expectEqual(node.?.right.?.right.?.right.?.type, 10);
+
+    _ = avl.destroy(false);
+}
+
+test "delete_10_2" {
+    var avl: lb.core.avl = undefined;
+    var root: ?*lb.core.avl_node = null;
+    var node: ?*lb.core.avl_node = undefined;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    _ = avl.insert(&root, 1, @as(*anyopaque, @ptrFromInt(1)));
+    _ = avl.insert(&root, 2, @as(*anyopaque, @ptrFromInt(2)));
+    _ = avl.insert(&root, 3, @as(*anyopaque, @ptrFromInt(3)));
+    _ = avl.insert(&root, 4, @as(*anyopaque, @ptrFromInt(4)));
+    _ = avl.insert(&root, 5, @as(*anyopaque, @ptrFromInt(5)));
+    _ = avl.insert(&root, 6, @as(*anyopaque, @ptrFromInt(6)));
+    _ = avl.insert(&root, 7, @as(*anyopaque, @ptrFromInt(7)));
+    _ = avl.insert(&root, 8, @as(*anyopaque, @ptrFromInt(8)));
+    _ = avl.insert(&root, 9, @as(*anyopaque, @ptrFromInt(9)));
+    _ = avl.insert(&root, 10, @as(*anyopaque, @ptrFromInt(10)));
+
+    try expect(root != null);
+
+    try expect(avl.remove(&root, 8) != null);
+    try expect(root != null);
+    try expect(avl.remove(&root, 6) != null);
+    try expect(root != null);
+
+    // 4
+    node = avl.search(root, 4);
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 4);
+
+    try expect(node.?.left != null);
+    try expect(node.?.right != null);
+    try expectEqual(node.?.parent, null);
+
+    try expectEqual(node.?.left.?.type, 2);
+    try expectEqual(node.?.left.?.left.?.type, 1);
+    try expectEqual(node.?.left.?.right.?.type, 3);
+
+    try expectEqual(node.?.right.?.type, 7);
+    try expectEqual(node.?.right.?.left.?.type, 5);
+    try expectEqual(node.?.right.?.right.?.type, 9);
+    try expectEqual(node.?.right.?.right.?.right.?.type, 10);
+
+    _ = avl.destroy(false);
+}
+
+test "delete_10_3" {
+    var avl: lb.core.avl = undefined;
+    var root: ?*lb.core.avl_node = null;
+    var node: ?*lb.core.avl_node = undefined;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    _ = avl.insert(&root, 1, @as(*anyopaque, @ptrFromInt(1)));
+    _ = avl.insert(&root, 2, @as(*anyopaque, @ptrFromInt(2)));
+    _ = avl.insert(&root, 3, @as(*anyopaque, @ptrFromInt(3)));
+    _ = avl.insert(&root, 4, @as(*anyopaque, @ptrFromInt(4)));
+    _ = avl.insert(&root, 5, @as(*anyopaque, @ptrFromInt(5)));
+    _ = avl.insert(&root, 6, @as(*anyopaque, @ptrFromInt(6)));
+    _ = avl.insert(&root, 7, @as(*anyopaque, @ptrFromInt(7)));
+    _ = avl.insert(&root, 8, @as(*anyopaque, @ptrFromInt(8)));
+    _ = avl.insert(&root, 9, @as(*anyopaque, @ptrFromInt(9)));
+    _ = avl.insert(&root, 10, @as(*anyopaque, @ptrFromInt(10)));
+
+    try expect(root != null);
+
+    try expect(avl.remove(&root, 9) != null);
+    try expect(root != null);
+
+    // 4
+    node = avl.search(root, 4);
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 4);
+
+    try expect(node.?.left != null);
+    try expect(node.?.right != null);
+    try expectEqual(node.?.parent, null);
+
+    try expectEqual(node.?.left.?.type, 2);
+    try expectEqual(node.?.left.?.left.?.type, 1);
+    try expectEqual(node.?.left.?.right.?.type, 3);
+
+    try expectEqual(node.?.right.?.type, 8);
+    try expectEqual(node.?.right.?.left.?.type, 6);
+    try expectEqual(node.?.right.?.right.?.type, 10);
+    try expectEqual(node.?.right.?.left.?.left.?.type, 5);
+    try expectEqual(node.?.right.?.left.?.right.?.type, 7);
+
+    _ = avl.destroy(false);
+}
+
+test "delete_10_4" {
+    var avl: lb.core.avl = undefined;
+    var root: ?*lb.core.avl_node = null;
+    var node: ?*lb.core.avl_node = undefined;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    _ = avl.insert(&root, 1, @as(*anyopaque, @ptrFromInt(1)));
+    _ = avl.insert(&root, 2, @as(*anyopaque, @ptrFromInt(2)));
+    _ = avl.insert(&root, 3, @as(*anyopaque, @ptrFromInt(3)));
+    _ = avl.insert(&root, 4, @as(*anyopaque, @ptrFromInt(4)));
+    _ = avl.insert(&root, 5, @as(*anyopaque, @ptrFromInt(5)));
+    _ = avl.insert(&root, 6, @as(*anyopaque, @ptrFromInt(6)));
+    _ = avl.insert(&root, 7, @as(*anyopaque, @ptrFromInt(7)));
+    _ = avl.insert(&root, 8, @as(*anyopaque, @ptrFromInt(8)));
+    _ = avl.insert(&root, 9, @as(*anyopaque, @ptrFromInt(9)));
+    _ = avl.insert(&root, 10, @as(*anyopaque, @ptrFromInt(10)));
+
+    try expect(root != null);
+
+    try expect(avl.remove(&root, 4) != null);
+    try expect(root != null);
+
+    // 3
+    node = avl.search(root, 3);
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 3);
+
+    try expect(node.?.left != null);
+    try expect(node.?.right != null);
+    try expectEqual(node.?.parent, null);
+
+    try expectEqual(node.?.left.?.type, 2);
+    try expectEqual(node.?.left.?.left.?.type, 1);
+
+    try expectEqual(node.?.right.?.type, 8);
+    try expectEqual(node.?.right.?.left.?.type, 6);
+    try expectEqual(node.?.right.?.right.?.type, 9);
+    try expectEqual(node.?.right.?.left.?.left.?.type, 5);
+    try expectEqual(node.?.right.?.left.?.right.?.type, 7);
+    try expectEqual(node.?.right.?.right.?.right.?.type, 10);
+
+    _ = avl.destroy(false);
+}
+
+test "delete_10_5" {
+    var avl: lb.core.avl = undefined;
+    var root: ?*lb.core.avl_node = null;
+    var node: ?*lb.core.avl_node = undefined;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    _ = avl.insert(&root, 1, @as(*anyopaque, @ptrFromInt(1)));
+    _ = avl.insert(&root, 2, @as(*anyopaque, @ptrFromInt(2)));
+    _ = avl.insert(&root, 3, @as(*anyopaque, @ptrFromInt(3)));
+    _ = avl.insert(&root, 4, @as(*anyopaque, @ptrFromInt(4)));
+    _ = avl.insert(&root, 5, @as(*anyopaque, @ptrFromInt(5)));
+    _ = avl.insert(&root, 6, @as(*anyopaque, @ptrFromInt(6)));
+    _ = avl.insert(&root, 7, @as(*anyopaque, @ptrFromInt(7)));
+    _ = avl.insert(&root, 8, @as(*anyopaque, @ptrFromInt(8)));
+    _ = avl.insert(&root, 9, @as(*anyopaque, @ptrFromInt(9)));
+    _ = avl.insert(&root, 10, @as(*anyopaque, @ptrFromInt(10)));
+
+    try expect(root != null);
+
+    try expect(avl.remove(&root, 6) != null);
+    try expect(root != null);
+
+    // 4
+    node = avl.search(root, 4);
+    try expect(node != null);
+
+    try expectEqual(node.?.type, 4);
+
+    try expect(node.?.left != null);
+    try expect(node.?.right != null);
+    try expectEqual(node.?.parent, null);
+
+    try expectEqual(node.?.left.?.type, 2);
+    try expectEqual(node.?.left.?.left.?.type, 1);
+    try expectEqual(node.?.left.?.right.?.type, 3);
+
+    try expectEqual(node.?.right.?.type, 8);
+    try expectEqual(node.?.right.?.left.?.type, 5);
+    try expectEqual(node.?.right.?.right.?.type, 9);
+    try expectEqual(node.?.right.?.left.?.right.?.type, 7);
+    try expectEqual(node.?.right.?.right.?.right.?.type, 10);
+
+    _ = avl.destroy(false);
+}
+
+test "clean" {
+    var avl: lb.core.avl = undefined;
+    _ = avl.init(1024, 0);
+
+    avl.clean();
+
+    _ = avl.destroy(false);
+}
+
+test "destroy" {
+    var avl = lb.core.avl.create().?;
+    _ = avl.init(1024, 0);
+
+    try expectEqual(avl.destroy(true), null);
+
+    avl = lb.core.avl.create().?;
+    _ = avl.init(1021, 0);
+
+    try expectEqual(avl.destroy(false), avl);
+    try expectEqual(avl.destroy(true), null);
+    try expectEqual(lb.core.avl.destroy(null, false), null);
+}
+
+test "destroy_stack" {
+    var avl: lb.core.avl = undefined;
+    _ = avl.init(1024, 0);
+
+    try expectEqual(avl.destroy(false), &avl);
+}
