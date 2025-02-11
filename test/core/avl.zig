@@ -10,7 +10,7 @@ pub const avl_test_ctx = struct {
     p: ?*usize,
 };
 
-pub const avl_cb = *const fn (avl: ?*lb.core.avl, root: ?*?*lb.core.avl_node, node: ?*lb.core.avl_node, ctx: ?*anyopaque) callconv(.C) lb.core.status;
+// pub const avl_cb = *const fn (avl: ?*lb.core.avl, root: ?*?*lb.core.avl_node, node: ?*lb.core.avl_node, ctx: ?*anyopaque) callconv(.C) lb.core.status;
 
 test "init" {
     var avl = lb.core.avl.create().?;
@@ -1089,4 +1089,55 @@ test "destroy_stack" {
     _ = avl.init(1024, 0);
 
     try expectEqual(avl.destroy(false), &avl);
+}
+
+test "foreach_4" {
+    var p: *usize = undefined;
+    var i: usize = undefined;
+    var avl: lb.core.avl = undefined;
+    var t: avl_test_ctx = undefined;
+    var root: ?*lb.core.avl_node = null;
+
+    try expectEqual(avl.init(1024, 0), @intFromEnum(lb.core.Status.ok));
+
+    i = 5;
+    while (i > 1) : (i -= 1) {
+        _ = avl.insert(&root, i, null);
+    }
+
+    t.result = @ptrCast(@alignCast(lb.core.malloc(10 * @sizeOf(usize))));
+    try expect(t.result != null);
+
+    t.remove = 4;
+    t.p = t.result;
+
+    _ = avl.foreach(&root, avl_cb, &t);
+
+    p = t.result.?;
+
+    i = 2;
+    while (i < 6) : (i += 1) {
+        try expect(p != t.p);
+        try expectEqual(i, p.*);
+        p = @ptrFromInt(@intFromPtr(p) + @sizeOf(usize));
+    }
+
+    lb.core.free(t.result);
+    _ = avl.destroy(false);
+}
+
+fn avl_cb(avl: ?*lb.core.avl, root: ?*?*lb.core.avl_node, node: ?*lb.core.avl_node, ctx: ?*anyopaque) callconv(.C) lb.core.status {
+    const t = ctx;
+
+    @as(*avl_test_ctx, @ptrCast(@alignCast(t.?))).p.?.* = node.?.type;
+
+    const pointer_address = @intFromPtr(@as(*avl_test_ctx, @ptrCast(@alignCast(t.?))).p.?);
+
+    @as(*avl_test_ctx, @ptrCast(@alignCast(t.?))).p.? = @ptrFromInt(pointer_address + @sizeOf(usize));
+
+    if (node.?.type == @as(*avl_test_ctx, @ptrCast(@alignCast(t.?))).remove) {
+        avl.?.remove_by_node(root, node);
+    }
+
+    return @intFromEnum(lb.core.Status.ok);
 }

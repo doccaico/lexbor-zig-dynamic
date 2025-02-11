@@ -1,9 +1,9 @@
-// src/core.zig
+// src/core.h
 const std = @import("std");
 
 const lb = @import("lexbor.zig");
 
-// core/array.zig
+// core/array.h
 
 pub const array = extern struct {
     list: ?[*]?*anyopaque,
@@ -84,7 +84,7 @@ extern "c" fn lexbor_array_get_noi(array: ?*array, idx: usize) ?*anyopaque;
 extern "c" fn lexbor_array_length_noi(array: ?*array) usize;
 extern "c" fn lexbor_array_size_noi(array: ?*array) usize;
 
-// core/array_obj.zig
+// core/array_obj.h
 
 pub const array_obj = extern struct {
     list: ?[*]u8,
@@ -169,7 +169,7 @@ extern "c" fn lexbor_array_obj_size_noi(array: ?*array_obj) usize;
 extern "c" fn lexbor_array_obj_struct_size_noi(array: ?*array_obj) usize;
 extern "c" fn lexbor_array_obj_last_noi(array: ?*array_obj) ?*anyopaque;
 
-// core/avl.zig
+// core/avl.h
 
 pub const avl_node_f = *const fn (avl: ?*avl, root: ?*?*avl_node, node: ?*avl_node, ctx: ?*anyopaque) callconv(.C) status;
 
@@ -255,7 +255,7 @@ extern "c" fn lexbor_avl_remove_by_node(avl: ?*avl, root: ?*?*avl_node, node: ?*
 extern "c" fn lexbor_avl_foreach(avl: ?*avl, scope: ?*?*avl_node, cb: avl_node_f, ctx: ?*anyopaque) status;
 extern "c" fn lexbor_avl_foreach_recursion(avl: ?*avl, scope: ?*avl_node, callback: avl_node_f, ctx: ?*anyopaque) void;
 
-// core/base.zig
+// core/base.h
 
 pub const Status = enum(c_int) {
     ok = 0x0000,
@@ -281,7 +281,7 @@ pub const Status = enum(c_int) {
     warning,
 };
 
-// core/dobject.zig
+// core/dobject.h
 
 pub const dobject = extern struct {
     mem: ?*mem,
@@ -291,7 +291,7 @@ pub const dobject = extern struct {
     struct_size: usize,
 };
 
-// core/mem.zig
+// core/mem.h
 
 pub const mem_chunk = extern struct {
     data: ?*u8,
@@ -310,6 +310,39 @@ pub const mem = extern struct {
     chunk_length: usize,
 };
 
-// core/types.zig
+// core/lexbor.h
+
+pub fn malloc(size: usize) ?*anyopaque {
+    return lexbor_malloc(size);
+}
+
+pub fn realloc(dst: ?*anyopaque, size: usize) ?*anyopaque {
+    return lexbor_realloc(dst, size);
+}
+
+pub fn calloc(num: usize, size: usize) ?*anyopaque {
+    return lexbor_calloc(num, size);
+}
+
+pub fn free(dst: ?*anyopaque) void {
+    lexbor_free(dst);
+}
+
+pub fn setup(new_malloc: malloc_f, new_realloc: realloc_f, new_calloc: calloc_f, new_free: free_f) void {
+    lexbor_memory_setup(new_malloc, new_realloc, new_calloc, new_free);
+}
+
+pub const malloc_f = *const fn (size: usize) callconv(.C) ?*anyopaque;
+pub const realloc_f = *const fn (dst: ?*anyopaque, size: usize) callconv(.C) ?*anyopaque;
+pub const calloc_f = *const fn (num: usize, size: usize) callconv(.C) ?*anyopaque;
+pub const free_f = *const fn (dst: ?*anyopaque) callconv(.C) void;
+
+extern "c" fn lexbor_malloc(size: usize) ?*anyopaque;
+extern "c" fn lexbor_realloc(dst: *anyopaque, size: usize) ?*anyopaque;
+extern "c" fn lexbor_calloc(num: usize, size: usize) ?*anyopaque;
+extern "c" fn lexbor_free(dst: ?*anyopaque) void;
+extern "c" fn lexbor_memory_setup(new_malloc: malloc_f, new_realloc: realloc_f, new_calloc: calloc_f, new_free: free_f) void;
+
+// core/types.h
 
 pub const status = c_uint;
