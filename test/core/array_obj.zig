@@ -74,8 +74,16 @@ test "pop" {
     _ = array.destroy(false);
 }
 
-// TODO
-// https://github.com/lexbor/lexbor/blob/v2.4.0/test/lexbor/core/array_obj.c#L96
+test "pop_if_empty" {
+    var array: lb.core.array_obj = undefined;
+    _ = array.init(32, @sizeOf(test_struct));
+
+    try expectEqual(array.length, 0);
+    try expectEqual(array.pop(), null);
+    try expectEqual(array.length, 0);
+
+    _ = array.destroy(false);
+}
 
 // test "get" {
 //     var array: lb.core.array = undefined;
