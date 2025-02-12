@@ -452,6 +452,59 @@ extern "c" fn lexbor_bst_map_insert_not_exists(bst_map: ?*bst_map, scope: ?*?*lb
 extern "c" fn lexbor_bst_map_remove(bst_map: ?*bst_map, scope: ?*?*lb.core.bst_entry, key: ?*const char, key_len: usize) ?*anyopaque;
 extern "c" fn lexbor_bst_map_mraw_noi(bst_map: ?*bst_map) ?*mraw;
 
+// core/conv.h
+
+pub fn conv_float_to_data(num: f64, buf: ?*char, len: usize) usize {
+    return lexbor_conv_float_to_data(num, buf, len);
+}
+
+pub fn conv_long_to_data(num: c_long, buf: ?*char, len: usize) usize {
+    return lexbor_conv_long_to_data(num, buf, len);
+}
+
+pub fn conv_int64_to_data(num: i64, buf: ?*char, len: usize) usize {
+    return lexbor_conv_int64_to_data(num, buf, len);
+}
+
+pub fn conv_data_to_double(start: ?*const ?*char, len: usize) f64 {
+    return lexbor_conv_data_to_double(start, len);
+}
+
+pub fn conv_data_to_ulong(data: ?*const ?*char, length: usize) c_ulong {
+    return lexbor_conv_data_to_ulong(data, length);
+}
+
+pub fn conv_data_to_long(data: ?*const ?*char, length: usize) c_long {
+    return lexbor_conv_data_to_long(data, length);
+}
+
+pub fn conv_data_to_uint(data: ?*const ?*char, length: usize) c_uint {
+    return lexbor_conv_data_to_uint(data, length);
+}
+
+pub fn conv_dec_to_hex(number: u32, out: ?*char, length: usize) usize {
+    return lexbor_conv_dec_to_hex(number, out, length);
+}
+
+extern "c" fn lexbor_conv_float_to_data(num: f64, buf: ?*char, len: usize) usize;
+extern "c" fn lexbor_conv_long_to_data(num: c_long, buf: ?*char, len: usize) usize;
+extern "c" fn lexbor_conv_int64_to_data(num: i64, buf: ?*char, len: usize) usize;
+extern "c" fn lexbor_conv_data_to_double(start: ?*const ?*char, len: usize) f64;
+extern "c" fn lexbor_conv_data_to_ulong(data: ?*const ?*char, length: usize) c_ulong;
+extern "c" fn lexbor_conv_data_to_long(data: ?*const ?*char, length: usize) c_long;
+extern "c" fn lexbor_conv_data_to_uint(data: ?*const ?*char, length: usize) c_uint;
+extern "c" fn lexbor_conv_dec_to_hex(number: u32, out: ?*char, length: usize) usize;
+
+pub inline fn conv_double_to_long(number: f64) c_long {
+    if (number > std.math.maxInt(c_long)) {
+        return std.math.maxInt(c_long);
+    }
+    if (number < std.math.minInt(c_long)) {
+        return -std.math.minInt(c_long);
+    }
+    return @trunc(number);
+}
+
 // core/dobject.h
 
 pub const dobject = extern struct {
