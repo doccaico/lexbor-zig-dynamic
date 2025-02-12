@@ -400,7 +400,7 @@ extern "c" fn lexbor_bst_serialize_entry(entry: ?*bst_entry, callback: callback_
 // core/bst_map.h
 
 pub const bst_map_entry = extern struct {
-    str: ?*str,
+    str: str,
     value: ?*anyopaque,
 };
 
@@ -421,23 +421,23 @@ pub const bst_map = extern struct {
         return lexbor_bst_map_clean(self);
     }
 
-    pub fn destory(self: ?*bst_map, self_destroy: bool) ?*bst_map {
+    pub fn destroy(self: ?*bst_map, self_destroy: bool) ?*bst_map {
         return lexbor_bst_map_destroy(self, self_destroy);
     }
 
-    pub fn search(self: ?*bst_map, scope: ?*bst_map_entry, key: ?*char, key_len: usize) ?*bst_map_entry {
+    pub fn search(self: ?*bst_map, scope: ?*lb.core.bst_entry, key: ?*const char, key_len: usize) ?*bst_map_entry {
         return lexbor_bst_map_search(self, scope, key, key_len);
     }
 
-    pub fn insert(self: ?*bst_map, scope: ?*?*bst_map_entry, key: ?*char, key_len: usize, value: ?*anyopaque) ?*bst_map_entry {
+    pub fn insert(self: ?*bst_map, scope: ?*?*lb.core.bst_entry, key: ?*const char, key_len: usize, value: ?*anyopaque) ?*bst_map_entry {
         return lexbor_bst_map_insert(self, scope, key, key_len, value);
     }
 
-    pub fn insert_not_exists(self: ?*bst_map, scope: ?*?*bst_map_entry, key: ?*char, key_len: usize) ?*bst_map_entry {
+    pub fn insert_not_exists(self: ?*bst_map, scope: ?*?*lb.core.bst_entry, key: ?*const char, key_len: usize) ?*bst_map_entry {
         return lexbor_bst_map_insert_not_exists(self, scope, key, key_len);
     }
 
-    pub fn remove(self: ?*bst_map, scope: ?*?*bst_map_entry, key: ?*char, key_len: usize) ?*anyopaque {
+    pub fn remove(self: ?*bst_map, scope: ?*?*lb.core.bst_entry, key: ?*const char, key_len: usize) ?*anyopaque {
         return lexbor_bst_map_remove(self, scope, key, key_len);
     }
 };
@@ -446,10 +446,10 @@ extern "c" fn lexbor_bst_map_create() ?*bst_map;
 extern "c" fn lexbor_bst_map_init(bst_map: ?*bst_map, size: usize) status;
 extern "c" fn lexbor_bst_map_clean(bst_map: ?*bst_map) void;
 extern "c" fn lexbor_bst_map_destroy(bst_map: ?*bst_map, self_destroy: bool) ?*bst_map;
-extern "c" fn lexbor_bst_map_search(bst_map: ?*bst_map, scope: ?*bst_map_entry, key: ?*char, key_len: usize) ?*bst_map_entry;
-extern "c" fn lexbor_bst_map_insert(bst_map: ?*bst_map, scope: ?*?*bst_map_entry, key: ?*char, key_len: usize, value: ?*anyopaque) ?*bst_map_entry;
-extern "c" fn lexbor_bst_map_insert_not_exists(bst_map: ?*bst_map, scope: ?*?*bst_map_entry, key: ?*char, key_len: usize) ?*bst_map_entry;
-extern "c" fn lexbor_bst_map_remove(bst_map: ?*bst_map, scope: ?*?*bst_map_entry, key: ?*char, key_len: usize) ?*anyopaque;
+extern "c" fn lexbor_bst_map_search(bst_map: ?*bst_map, scope: ?*lb.core.bst_entry, key: ?*const char, key_len: usize) ?*bst_map_entry;
+extern "c" fn lexbor_bst_map_insert(bst_map: ?*bst_map, scope: ?*?*lb.core.bst_entry, key: ?*const char, key_len: usize, value: ?*anyopaque) ?*bst_map_entry;
+extern "c" fn lexbor_bst_map_insert_not_exists(bst_map: ?*bst_map, scope: ?*?*lb.core.bst_entry, key: ?*const char, key_len: usize) ?*bst_map_entry;
+extern "c" fn lexbor_bst_map_remove(bst_map: ?*bst_map, scope: ?*?*lb.core.bst_entry, key: ?*const char, key_len: usize) ?*anyopaque;
 extern "c" fn lexbor_bst_map_mraw_noi(bst_map: ?*bst_map) ?*mraw;
 
 // core/dobject.h

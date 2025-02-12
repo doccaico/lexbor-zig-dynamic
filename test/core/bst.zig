@@ -22,7 +22,7 @@ fn test_for_push(bst: *lb.core.bst) !void {
 }
 
 test "init" {
-    var bst = lb.core.array.create().?;
+    var bst = lb.core.bst.create().?;
     const status = bst.init(128);
 
     try expectEqual(status, @intFromEnum(lb.core.Status.ok));
