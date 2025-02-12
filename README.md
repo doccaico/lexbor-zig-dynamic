@@ -1,5 +1,5 @@
 ### (WIP) lexbor-zig-dynamic (currently windows only)
-Experimental Zig build package and wrapper for [Lexbor](https://github.com/lexbor/lexbor/) v2.4.0
+Experimental Zig wrapper for [Lexbor](https://github.com/lexbor/lexbor/) v2.4.0
 
 #### Fetch
 ```
