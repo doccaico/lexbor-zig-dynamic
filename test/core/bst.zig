@@ -186,22 +186,142 @@ test "bst_remove" {
 }
 
 test "bst_remove_one_child" {
-    // var bst: lb.core.bst = undefined;
-    // var value: ?*anyopaque = undefined;
-    // try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
-    //
-    // try test_for_push(&bst);
-    //
-    // value = bst.remove(&bst.root, 1);
-    // try expect(value != null);
-    //
-    // try expectEqual(bst.root.?.size, 5);
-    // try expectEqual(bst.root.?.left.?.size, 2);
-    // try expectEqual(bst.root.?.left.?.right.?.size, 3);
-    // try expectEqual(bst.root.?.left.?.right.?.right.?.size, 4);
-    // try expectEqual(bst.root.?.right.?.size, 18);
-    //
-    // try expectEqual(bst.root.?.left.?.left, null);
-    //
-    // _ = bst.destroy(false);
+    var bst: lb.core.bst = undefined;
+    var value: ?*anyopaque = undefined;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    try test_for_push(&bst);
+
+    value = bst.remove(&bst.root, 3);
+    try expect(value != null);
+
+    try expectEqual(bst.root.?.size, 5);
+    try expectEqual(bst.root.?.left.?.size, 2);
+    try expectEqual(bst.root.?.left.?.left.?.size, 1);
+    try expectEqual(bst.root.?.left.?.right.?.size, 4);
+    try expectEqual(bst.root.?.right.?.size, 18);
+
+    _ = bst.destroy(false);
+}
+
+test "bst_remove_two_child" {
+    var bst: lb.core.bst = undefined;
+    var value: ?*anyopaque = undefined;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    try expect(bst.insert(&bst.root, 5, @as(*anyopaque, @ptrFromInt(5))) != null);
+    try expect(bst.insert(&bst.root, 2, @as(*anyopaque, @ptrFromInt(2))) != null);
+    try expect(bst.insert(&bst.root, 1, @as(*anyopaque, @ptrFromInt(1))) != null);
+    try expect(bst.insert(&bst.root, 3, @as(*anyopaque, @ptrFromInt(3))) != null);
+    try expect(bst.insert(&bst.root, 4, @as(*anyopaque, @ptrFromInt(4))) != null);
+    try expect(bst.insert(&bst.root, 12, @as(*anyopaque, @ptrFromInt(12))) != null);
+    try expect(bst.insert(&bst.root, 9, @as(*anyopaque, @ptrFromInt(9))) != null);
+    try expect(bst.insert(&bst.root, 21, @as(*anyopaque, @ptrFromInt(21))) != null);
+    try expect(bst.insert(&bst.root, 19, @as(*anyopaque, @ptrFromInt(19))) != null);
+    try expect(bst.insert(&bst.root, 25, @as(*anyopaque, @ptrFromInt(25))) != null);
+
+    try expectEqual(bst.root.?.size, 5);
+    try expectEqual(bst.root.?.left.?.size, 2);
+    try expectEqual(bst.root.?.left.?.left.?.size, 1);
+    try expectEqual(bst.root.?.left.?.right.?.size, 3);
+    try expectEqual(bst.root.?.left.?.right.?.right.?.size, 4);
+    try expectEqual(bst.root.?.right.?.size, 12);
+    try expectEqual(bst.root.?.right.?.left.?.size, 9);
+    try expectEqual(bst.root.?.right.?.right.?.size, 21);
+    try expectEqual(bst.root.?.right.?.right.?.left.?.size, 19);
+    try expectEqual(bst.root.?.right.?.right.?.right.?.size, 25);
+
+    value = bst.remove(&bst.root, 12);
+    try expect(value != null);
+
+    try expectEqual(bst.root.?.size, 5);
+    try expectEqual(bst.root.?.left.?.size, 2);
+    try expectEqual(bst.root.?.left.?.left.?.size, 1);
+    try expectEqual(bst.root.?.left.?.right.?.size, 3);
+    try expectEqual(bst.root.?.left.?.right.?.right.?.size, 4);
+    try expectEqual(bst.root.?.right.?.size, 19);
+    try expectEqual(bst.root.?.right.?.left.?.size, 9);
+    try expectEqual(bst.root.?.right.?.right.?.size, 21);
+    try expectEqual(bst.root.?.right.?.right.?.right.?.size, 25);
+
+    try expectEqual(bst.root.?.right.?.right.?.left, null);
+
+    _ = bst.destroy(false);
+}
+
+test "bst_remove_root_two_child" {
+    var bst: lb.core.bst = undefined;
+    var value: ?*anyopaque = undefined;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    try expect(bst.insert(&bst.root, 20, @as(*anyopaque, @ptrFromInt(20))) != null);
+    try expect(bst.insert(&bst.root, 10, @as(*anyopaque, @ptrFromInt(10))) != null);
+    try expect(bst.insert(&bst.root, 5, @as(*anyopaque, @ptrFromInt(5))) != null);
+
+    try expectEqual(bst.root.?.size, 20);
+    try expectEqual(bst.root.?.parent, null);
+
+    value = bst.remove(&bst.root, 20);
+    try expect(value != null);
+
+    try expectEqual(bst.root.?.size, 10);
+    try expectEqual(bst.root.?.parent, null);
+
+    _ = bst.destroy(false);
+}
+
+test "bst_remove_close" {
+    var bst: lb.core.bst = undefined;
+    var value: ?*anyopaque = undefined;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    try test_for_push(&bst);
+
+    value = bst.remove_close(&bst.root, 7, null);
+    try expect(value != null);
+
+    try expectEqual(bst.root.?.size, 5);
+    try expectEqual(bst.root.?.left.?.size, 2);
+    try expectEqual(bst.root.?.left.?.left.?.size, 1);
+    try expectEqual(bst.root.?.left.?.right.?.size, 3);
+    try expectEqual(bst.root.?.left.?.right.?.right.?.size, 4);
+
+    try expectEqual(bst.root.?.right, null);
+
+    _ = bst.destroy(false);
+}
+
+test "clean" {
+    var bst: lb.core.bst = undefined;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    const entry = bst.insert(&bst.root, 100, null);
+    try expect(entry != null);
+    try expectEqual(bst.tree_length, 1);
+
+    bst.clean();
+    try expectEqual(bst.tree_length, 0);
+
+    _ = bst.destroy(false);
+}
+
+test "destroy" {
+    var bst = lb.core.array.create().?;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    try expectEqual(bst.destroy(true), null);
+
+    bst = lb.core.array.create().?;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    try expectEqual(bst.destroy(false), bst);
+    try expectEqual(bst.destroy(true), null);
+    try expectEqual(lb.core.bst.destroy(null, false), null);
+}
+
+test "destroy_stack" {
+    var bst: lb.core.bst = undefined;
+    try expectEqual(bst.init(128), @intFromEnum(lb.core.Status.ok));
+
+    try expectEqual(bst.destroy(false), &bst);
 }
