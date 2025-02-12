@@ -333,7 +333,7 @@ pub const bst = extern struct {
         return lexbor_bst_create();
     }
 
-    pub fn init(self: ?*bst, size: usize) ?*bst {
+    pub fn init(self: ?*bst, size: usize) status {
         return lexbor_bst_init(self, size);
     }
 
@@ -383,7 +383,7 @@ pub const bst = extern struct {
 };
 
 extern "c" fn lexbor_bst_create() ?*bst;
-extern "c" fn lexbor_bst_init(bst: ?*bst, size: usize) ?*bst;
+extern "c" fn lexbor_bst_init(bst: ?*bst, size: usize) status;
 extern "c" fn lexbor_bst_clean(bst: ?*bst) void;
 extern "c" fn lexbor_bst_destroy(bst: ?*bst, self_destroy: bool) ?*bst;
 extern "c" fn lexbor_bst_entry_make(bst: ?*bst, size: usize) ?*bst_entry;
