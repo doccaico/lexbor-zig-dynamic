@@ -6,12 +6,6 @@ const expectEqual = std.testing.expectEqual;
 const lb = @import("lexbor");
 
 test "init" {
-    std.debug.print("{}\n", .{std.math.maxInt(c_long)});
-    std.debug.print("{}\n", .{-std.math.maxInt(c_long)});
-
-    const a: f64 = 50.99;
-    std.debug.print("{any}\n", .{lb.core.conv_double_to_long(a)});
-
     // var bst_map = lb.core.bst_map.create().?;
     // const status = bst_map.init(128);
     //
