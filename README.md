@@ -2,7 +2,7 @@
 
 #### Fetch
 ```
-zig fetch --save=lexbor https://github.com/doccaico/lexbor-zig/archive/<git-commit-hash>.tar.gz
+zig fetch --save=lexbor https://github.com/doccaico/lexbor-zig-dll/archive/<git-commit-hash>.tar.gz
 ```
 
 #### Usage
