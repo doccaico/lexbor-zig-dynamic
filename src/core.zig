@@ -500,7 +500,7 @@ pub inline fn conv_double_to_long(number: f64) c_long {
         return std.math.maxInt(c_long);
     }
     if (number < std.math.minInt(c_long)) {
-        return -std.math.minInt(c_long);
+        return -std.math.maxInt(c_long);
     }
     return @trunc(number);
 }
