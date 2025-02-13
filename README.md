@@ -10,6 +10,8 @@ zig fetch --save=lexbor https://github.com/doccaico/lexbor-zig-dynamic/archive/<
 ```zig
 // build.zig
 
+// const exe = b.addExecutable(.{
+// ...
 const lexbor_dep = b.dependency("lexbor", .{ .target = target, .optimize = optimize });
 exe.root_module.addImport("lexbor", lexbor_dep.module("lexbor"));
 
