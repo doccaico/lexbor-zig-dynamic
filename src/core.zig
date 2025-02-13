@@ -70,7 +70,7 @@ pub const array = extern struct {
     }
 };
 
-extern "c" fn lexbor_array_create() ?*array;
+extern fn lexbor_array_create() ?*array;
 extern "c" fn lexbor_array_init(array: ?*array, size: usize) status;
 extern "c" fn lexbor_array_clean(array: ?*array) void;
 extern "c" fn lexbor_array_destroy(array: ?*array, self_destroy: bool) ?*array;

@@ -3,7 +3,7 @@ Experimental Zig wrapper for [Lexbor](https://github.com/lexbor/lexbor/) v2.4.0
 
 #### Fetch
 ```
-zig fetch --save=lexbor https://github.com/doccaico/lexbor-zig-dll/archive/<git-commit-hash>.tar.gz
+zig fetch --save=lexbor https://github.com/doccaico/lexbor-zig-dynamic/archive/<git-commit-hash>.tar.gz
 ```
 
 #### Usage
@@ -23,7 +23,7 @@ const std = @import("std");
 const lb = @import("lexbor");
 
 pub fn main() !void {
-    var array = lb.core.array.create();
+    var array = lb.core.array.create().?;
     const status = array.init(32);
 
     try std.testing.expectEqual(status, @intFromEnum(lb.core.Status.ok));
